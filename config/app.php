@@ -182,11 +182,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-
-
-        //////////////
+        App\Providers\RepositoryServiceProvider :: class,
+       // App\Repositories\ArticleRepositoryEloquent :: class,
         ///
-
+        Collective\Html\HtmlServiceProvider::class,
     ],
 
     /*
@@ -239,7 +238,8 @@ return [
 
 
         ////////////////
-        'Form' => Collective\Html\FormFacade::class,
+        'Form' => laravelcollective\Html\src\FormFacade::class,
+        'Html' => laravelcollective\Html\src\HtmlFacade::class,
 
     ],
 
