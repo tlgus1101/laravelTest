@@ -27,8 +27,6 @@ class ArticleRepositoryEloquent extends BaseRepository implements ArticleReposit
     public function test(){
 
     }
-    
-
     /**
      * Boot up the repository, pushing criteria
      */
@@ -36,5 +34,6 @@ class ArticleRepositoryEloquent extends BaseRepository implements ArticleReposit
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
+
 }

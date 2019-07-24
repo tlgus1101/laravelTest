@@ -8,28 +8,28 @@ use Illuminate\Database\Migrations\Migration;
  */
 class CreateArticlesTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('articles', function(Blueprint $table) {
-            $table->integer('idx');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('articles', function (Blueprint $table) {
+            $table->integer('idx',MYSQLI_AUTO_INCREMENT_FLAG);
             $table->string('title');
             $table->text('content');
             $table->timestamps();
-		});
-	}
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('articles');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('articles');
+    }
 }

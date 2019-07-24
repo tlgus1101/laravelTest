@@ -1,3 +1,7 @@
+@foreach($articles as $data)
+    <?   $article = $data;  ?>
+@endforeach
+
 <div>
     <label for="title">제목</label>
     <input type="text" id="title" name="title" value="{{ old('title', isset($article) ? $article->title : '') }}">

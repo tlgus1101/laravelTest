@@ -18,10 +18,13 @@ class ArticleValidator extends LaravelValidator
      * @var array
      */
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [],
-        ValidatorInterface::RULE_UPDATE => [],
+        ValidatorInterface::RULE_UPDATE => [
+            'title' => 'required|min:10|max:225',
+            'content' => 'required|min:10',
+        ],
+
         ValidatorInterface::RULE_CREATE => [
-            'title' => 'required|min:10|max:20',
+            'title' => 'required|min:10|max:225',
             'content' => 'required|min:10',
         ],
     ];

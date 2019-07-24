@@ -1,7 +1,11 @@
+
 <html>
-<head><title>shwo</title></head>
+<title>detail </title>
+
 <body>
+
 {!! Form::open([
+    'route' => 'article.detail',
     'method' => 'get'
 ]) !!}
 
@@ -9,10 +13,11 @@
     <table>
         <tr>
             <td>
-                <table border="1">
+                <table>
                     <tbody>
+                    {{$articles}}asdfasdf
                     @foreach($articles as $data)
-                    <tr >
+                    <tr>
                         <th><label for="title">제목</label></th>
                         <td><a name="detail"><input type="hidden" name="idx" id="idx" value="{{$data->idx}}">{{$data->title}}</a></td>
                     </tr>
@@ -21,43 +26,36 @@
                         <td>{{$data->created_at}}</td>
                     </tr>
                     <tr>
-                        <th width="200" ><label for="title">내용</label></th>
-                        <td width="300">{{$data->content}}</td>
+                        <th><label for="title">내용</label></th>
+                        <td>{{$data->content}}</td>
                     </tr>
                     @endforeach
                     </tbody>
-
                 </table>
             </td>
+            <td>
+                <button type="submit">검색</button>
+            </td>
+            <td>
+                <a id='write' name='write'>글쓰기</a>
+            </td>
         </tr>
+
     </table>
-    <td>
-        <a id='list' name='list'>목록</a>
-    </td>
-    <td>
-        <a id='reset' name='reset'>수정</a>
-    </td>
-    <td>
-        <a id='delete' name='delete'>삭제</a>
-    </td>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 
     $(document).ready(function () {
-        $("a[name='delete']").on("click",function (e) {
+        $("a[name='write']").on("click",function (e) {
             e.preventDefault();
-            location.href="/article/delete?idx=" + <?php  echo $_GET['idx']; ?>;
+            location.href="/article/create";
             //window.open("/article/create", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700");
         });
-        $("a[name='reset']").on("click",function (e) {
+        $("a[name='detail']").on("click",function (e) {
             e.preventDefault();
-            location.href="/article/create?ck=2&idx="+<?php  echo $_GET['idx']; ?>;
-            //window.open("/article/create", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700");
-        });
-        $("a[name='list']").on("click",function (e) {
-            e.preventDefault();
-            location.href="/article";
+            var idx = $(this).parent().find('#idx').val();
+            location.href="/article/detail";
         });
 
     });
@@ -66,7 +64,6 @@
 
 
 {!! Form::close() !!}
-
 
 </body>
 </html>

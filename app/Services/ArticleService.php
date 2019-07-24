@@ -33,17 +33,11 @@ class ArticleService extends BaseService
      * @param array $data
      * @return mixed
      */
-    public function create(array $data)
+    public function create(array $data)//$request == $data
     {
         $this->validate($this->validator, LaravelValidator::RULE_CREATE, $data);
 
         return $this->repo->create($data);
     }
 
-    public function form(array $data)
-    {
-        $this->validate($this->validator, LaravelValidator::RULE_UPDATE, $data);
-
-        return $this->repo->form($data);
-    }
 }
