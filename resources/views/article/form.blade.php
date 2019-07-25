@@ -1,9 +1,11 @@
+@if($articles != null)
 @foreach($articles as $data)
-    <?   $article = $data;  ?>
+    <?php   $article = $data;  ?>
 @endforeach
-
+@endif
 <div>
     <label for="title">제목</label>
+    <input type="hidden" id="idx" name="idx" value="{{ old('idx', isset($article) ? $article->idx : '') }}">
     <input type="text" id="title" name="title" value="{{ old('title', isset($article) ? $article->title : '') }}">
 </div>
 <div>

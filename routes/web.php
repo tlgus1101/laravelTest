@@ -14,4 +14,4 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('article', 'ArticleController');
+Route::resource('article', 'ArticleController')->only([ 'index' , 'show'  , 'create' ,'store'  ]);

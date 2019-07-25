@@ -16,7 +16,7 @@ class CreateArticlesTable extends Migration
     public function up()
     {
         Schema::create('articles', function (Blueprint $table) {
-            $table->integer('idx',MYSQLI_AUTO_INCREMENT_FLAG);
+            $table->increments('idx',MYSQLI_AUTO_INCREMENT_FLAG);
             $table->string('title');
             $table->text('content');
             $table->timestamps();

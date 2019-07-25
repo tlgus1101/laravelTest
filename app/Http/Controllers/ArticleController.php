@@ -9,6 +9,7 @@ use App\Services\ArticleService;
 use App\Repositories\ArticleRepositoryEloquent;
 use Illuminate\Http\Request;
 use DB;
+use App\Entities\Article;
 
 class ArticleController extends Controller
 {
@@ -19,7 +20,7 @@ class ArticleController extends Controller
     /**
      * @var ArticleRepository
      */
-   // private $articleRepository;
+    // private $articleRepository;
     /**
      * ArticleController constructor.
      * @param ArticleService $articleService
@@ -28,7 +29,8 @@ class ArticleController extends Controller
     public function __construct(
         ArticleService $articleService,
         ArticleRepositoryEloquent $articleRepository
-    ) {
+    )
+    {
         $this->articleService = $articleService;
         $this->articleRepository = $articleRepository;
     }
@@ -40,37 +42,43 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        if($_GET['ck']==2){
+        if ($_GET == null) {
+            $articles = null;
+            return view('article.create',compact('articles'));
+        } else if ($_GET['ck'] == 2) {
             $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-            $articles = $this->articleRepository->paginate(10);
+            $articles = $this->articleRepository->paginate(50);
             return view('article.create', compact('articles'));
         }
 
-        return view('article.create');
     }
+
+    public function edit()
+    {
+
+        // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
+        //$articles = $this->articleRepository->paginate(10);
+        //return view('article.detail', compact('articles'));
+        //$articles = $this->articleRepository->findByField('idx',$_GET['idx']);
+
+        $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
+        $articles = $this->articleRepository->paginate(1);
+        return view('article.edit', compact('articles'));
+    }
+
 
     public function show()
     {
         // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-
         //$articles = $this->articleRepository->paginate(10);
-
         //return view('article.detail', compact('articles'));
-
-        $article = array();
         //$articles = $this->articleRepository->findByField('idx',$_GET['idx']);
 
         $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-        $articles = $this->articleRepository->delete();
+        $articles = $this->articleRepository->paginate(1);
         return view('article.show', compact('articles'));
     }
 
-    public function edit(Request $request){
-
-//        $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-//        $article = $this->articleRepository->get();
-//        return redirect()->route('article.edit', $article->id);
-    }
 
     public function index(Request $request)
     {
@@ -78,14 +86,14 @@ class ArticleController extends Controller
         $createdAtFrom = $request->get('created_at_from');
         $createdAtTo = $request->get('created_at_to');
 
-        if($title){
+        if ($title) {
             $this->articleRepository->pushCriteria(new TitleCriteria($title));
         }
-        if($createdAtFrom && $createdAtTo){
-            $this->articleRepository->pushCriteria(new CreatedAtBetweenCriteria($createdAtFrom,$createdAtTo));
+        if ($createdAtFrom && $createdAtTo) {
+            $this->articleRepository->pushCriteria(new CreatedAtBetweenCriteria($createdAtFrom, $createdAtTo));
         }
 
-        $articles = $this->articleRepository->paginate(10);
+        $articles = $this->articleRepository->paginate(50);
 //
 //        $articles = DB::table('test.articles')->paginate(5);
 
@@ -96,12 +104,10 @@ class ArticleController extends Controller
     }
 
 
-
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -122,10 +128,31 @@ class ArticleController extends Controller
 
         //DB::table('article')->insert(['title'=>$title,'content'=>$content]);
         //Str::ascii($value)
-       // DB::table('article')->insert(['title'=>$title,'content'=>$content]);
-        $article = $this->articleService->create($request->all());
+        // DB::table('article')->insert(['title'=>$title,'content'=>$content]);
 
+        if($_POST['edit']=='ok'){
+          // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_POST['idx']));
+           // $articles = $this->articleRepository->update("update test.articles set title = $title AND contnet = $content");
+           // $art = array('title' => $_POST['title']  AND 'content' => $_POST['content']);
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $idx = $_POST['idx'];
+            $articles = [ 'title' => $idx,'idx'=>$idx];
+            printf($idx);
+          //  $articles = $this->articleRepository->update($art,$idx);
+
+            DB::update('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
+
+
+          // $articles = $this->articleRepository->update ('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
+            return redirect()->route('article.show', $articles);
+        }
+
+        else{
+        $article = $this->articleService->create($request->all());
         //return view('article.show');
         return redirect()->route('article.index', $article->id);
+        }
     }
+
 }

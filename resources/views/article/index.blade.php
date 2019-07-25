@@ -65,7 +65,7 @@
                 $("a[name='detail']").on("click",function (e) {
                     e.preventDefault();
                     var idx = $(this).parent().find('#idx').val();
-                    location.href="/article/detail?idx="+idx;
+                    location.href="/article/show?idx="+idx;
                 });
 
             });
