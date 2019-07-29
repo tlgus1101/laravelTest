@@ -25,3 +25,6 @@
             {{ $error }}
         @endforeach
     @endif</div>
+<div>
+    {!! Form::file('uploadFile') !!}
+</div>

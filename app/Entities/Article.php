@@ -20,6 +20,11 @@ class Article extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['idx','title', 'content'];
+    protected $fillable = ['title','img_old','img_new' ,'content'];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
 
 }

@@ -14,4 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('article', 'ArticleController')->only([ 'index' , 'show'  , 'create' ,'store'  ]);
+
+Route::resource('article', 'ArticleController');
+
+//Route::get('article/delete', 'UserController@delete')->name('delete');
+Route::get('article/{article}/update','ArticleController@update')->name('article.update');
+//Route::get('page','ArticleController@page')->name('article.page');
+//Route::POST('upload','ArticleController@upload')->name('article.upload');

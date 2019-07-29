@@ -2,7 +2,9 @@
 <head><title>shwo</title></head>
 <body>
 {!! Form::open([
-    'method' => 'get'
+    'method' => 'DELETE',
+    'id' => 'Form1',
+    'name' => 'Form1'
 ]) !!}
 
 <div>
@@ -24,46 +26,68 @@
                         <th width="200" ><label for="title">내용</label></th>
                         <td width="300">{{$data->content}}</td>
                     </tr>
+                    <tr>
+                        <th width="200" ><label for="title">이미지</label></th>
+                        <td width="300">{{$data->img_old}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" width="300">
+                            <img src="/../../../images/{{$data->img_new}}">
+                        </td>
+                    </tr>
                     @endforeach
                     </tbody>
 
                 </table>
-            </td>
         </tr>
     </table>
     <td>
-        <a id='list' name='list'>목록</a>
+        <button type="button" onclick="list()"> 목록</button>
     </td>
     <td>
-        <a id='reset' name='reset'>수정</a>
+        <button type="button" onclick="resetR()">  수정 </button>
     </td>
     <td>
-        <a id='delete' name='delete'>삭제</a>
+        <button type="button"  onclick="deleteF()"> 삭제</button>
     </td>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 
     $(document).ready(function () {
-        $("a[name='delete']").on("click",function (e) {
+       /* $("a[name='delete']").on("click",function (e) {
             e.preventDefault();
-            location.href="/article/edit?idx=" + <?php  echo $_GET['idx']; ?>;
+            location.href="/article/<?php  echo $_GET['idx']; ?>/destroy";
             //window.open("/article/create", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700");
         });
         $("a[name='reset']").on("click",function (e) {
             e.preventDefault();
-            location.href="/article/create?ck=2&idx="+<?php  echo $_GET['idx']; ?>;
+            location.href="/article/<?php  echo $_GET['idx']; ?>/edit";
             //window.open("/article/create", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700");
         });
         $("a[name='list']").on("click",function (e) {
             e.preventDefault();
             location.href="/article";
-        });
+        });*/
 
     });
 
-</script>
+    function deleteF() {
+        document.getElementById('Form1').setAttribute('action',"/article/<?php  echo $_GET['idx']; ?>");
+        document.getElementById("Form1").submit();
+    }
+    function resetR() {
 
+        document.getElementById('Form1').setAttribute('action',"/article/<?php  echo $_GET['idx']; ?>/edit");
+        document.getElementById("Form1").setAttribute('method',"GET");
+        document.getElementById("Form1").submit();
+    }
+    function list() {
+        document.getElementById('Form1').setAttribute('action',"/article");
+        document.getElementById("Form1").setAttribute('method',"GET");
+        document.getElementById("Form1").submit();
+    }
+</script>
 
 {!! Form::close() !!}
 

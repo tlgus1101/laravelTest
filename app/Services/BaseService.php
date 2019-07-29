@@ -15,9 +15,9 @@ abstract class BaseService
      * @param $data
      * @throws ValidatorException
      */
-    protected function validate(ArticleValidator $validator, $rule, $data)
+    protected function validate(LaravelValidator $validator, $rule, $data)
     {
-        if (!$validator --> with($data)) {
+        if (!$validator --> with($data)->passes($rule)) {
             throw new ValidatorException($validator->errorsBag());
         }
     }

@@ -18,6 +18,8 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('idx',MYSQLI_AUTO_INCREMENT_FLAG);
             $table->string('title');
+            $table->string('img_old');
+            $table->string('img_new');
             $table->text('content');
             $table->timestamps();
         });

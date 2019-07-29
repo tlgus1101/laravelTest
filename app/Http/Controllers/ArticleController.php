@@ -15,6 +15,7 @@ class ArticleController extends Controller
 {
     /**
      * @var ArticleService
+     * 컨트롤 하는 곳
      */
     private $articleService;
     /**
@@ -35,35 +36,50 @@ class ArticleController extends Controller
         $this->articleRepository = $articleRepository;
     }
 
-    /**
+    /**article.destroy
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        if ($_GET == null) {
-            $articles = null;
-            return view('article.create',compact('articles'));
-        } else if ($_GET['ck'] == 2) {
-            $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-            $articles = $this->articleRepository->paginate(50);
-            return view('article.create', compact('articles'));
-        }
-
+        $articles = null;
+        return view('article.create',compact('articles'));
     }
 
-    public function edit()
+    public function edit($idx)
     {
+        $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($idx));
+        $articles = $this->articleRepository->paginate(50);
+       // $articles=null;
+        return view('article.edit',compact('articles'));
+    }
+    public function update(Request $request)
+    {
+        // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_POST['idx']));
+        // $articles = $this->articleRepository->update("update test.articles set title = $title AND contnet = $content");
+        // $art = array('title' => $_POST['title']  AND 'content' => $_POST['content']);
+        //$title = $_POST['title'];
+       // $content = $_POST['content'];
+        //$idx = $_POST['idx'];
+        //$articles = [ 'title' => $idx,'idx'=>$idx];
+        //printf($idx);
+        //  $articles = $this->articleRepository->update($art,$idx);
 
-        // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-        //$articles = $this->articleRepository->paginate(10);
-        //return view('article.detail', compact('articles'));
-        //$articles = $this->articleRepository->findByField('idx',$_GET['idx']);
+       // DB::update('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
 
-        $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
-        $articles = $this->articleRepository->paginate(1);
-        return view('article.edit', compact('articles'));
+
+        // $articles = $this->articleRepository->update ('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
+        $articles = $this->articleService->update($request->all());
+        return redirect()->route('article.show',$articles);
+    }
+    public function destroy( Request $request)
+    {
+       // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($id));
+       // $articles = $this->articleRepository->delete($id);
+        //DB::delete ('DELETE FROM test.articles  where idx = ?',[$request->get('idx')]);
+        $this->articleService->delete($request->all());
+        return redirect()->route('article.index');
     }
 
 
@@ -76,6 +92,7 @@ class ArticleController extends Controller
 
         $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_GET['idx']));
         $articles = $this->articleRepository->paginate(1);
+
         return view('article.show', compact('articles'));
     }
 
@@ -93,7 +110,7 @@ class ArticleController extends Controller
             $this->articleRepository->pushCriteria(new CreatedAtBetweenCriteria($createdAtFrom, $createdAtTo));
         }
 
-        $articles = $this->articleRepository->paginate(50);
+        $articles = $this->articleRepository->orderBy('idx','desc')->paginate(50);
 //
 //        $articles = DB::table('test.articles')->paginate(5);
 
@@ -103,6 +120,18 @@ class ArticleController extends Controller
         return view('article.index', compact('articles'));
     }
 
+//   public function page()
+//    {
+//        return View("article.page");
+//    }
+//
+//    public function upload(Request $request){
+//        $file = $request->file('uploadFile');
+//
+//        $path = '../images';
+//        $file->move($path,$file->getClientOriginalName());
+//        return redirect()->route("article.page");
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -130,29 +159,57 @@ class ArticleController extends Controller
         //Str::ascii($value)
         // DB::table('article')->insert(['title'=>$title,'content'=>$content]);
 
-        if($_POST['edit']=='ok'){
-          // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_POST['idx']));
-           // $articles = $this->articleRepository->update("update test.articles set title = $title AND contnet = $content");
-           // $art = array('title' => $_POST['title']  AND 'content' => $_POST['content']);
-            $title = $_POST['title'];
-            $content = $_POST['content'];
-            $idx = $_POST['idx'];
-            $articles = [ 'title' => $idx,'idx'=>$idx];
-            printf($idx);
-          //  $articles = $this->articleRepository->update($art,$idx);
+//        if($_POST['edit']=='ok'){
+//          // $this->articleRepository->pushCriteria(new IdxCriteriaCriteria($_POST['idx']));
+//           // $articles = $this->articleRepository->update("update test.articles set title = $title AND contnet = $content");
+//           // $art = array('title' => $_POST['title']  AND 'content' => $_POST['content']);
+//           // $title = $_POST['title'];
+//            //$content = $_POST['content'];
+//            //$idx = $_POST['idx'];
+//            //$articles = [ 'title' => $idx,'idx'=>$idx];
+//           // printf($idx);
+//          //  $articles = $this->articleRepository->update($art,$idx);
+//
+//            $articles = $this->articleService->update($request->all());
+//            return redirect()->route('article.show', $articles);
+////        }
+//
+//        else{
 
-            DB::update('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
+
+        $file = $request->file('uploadFile');
+        $path = '../images';
 
 
-          // $articles = $this->articleRepository->update ('update test.articles set title = ? , content = ?  where idx = ?',[$title,$content,$idx]);
-            return redirect()->route('article.show', $articles);
+        $fileName = $file->getClientOriginalName();
+        $ext = explode('.',$fileName);
+
+        $ran='';
+        for ($i = 0; $i < 10; $i++) {
+            $ran .= mt_rand(0, 9);
         }
 
-        else{
+        $ret = time() ."-" . $ran . "." . array_pop($ext);
+        //$ret = "$name.$ext";
+
+        $Cnt = 0;
+
+        while (file_exists($path . $ret) != null) {
+            $Cnt++;
+            $ret = $ret . "_" . $Cnt . "." . $ext;
+
+        }
+
+        $file->move($path,$ret);
+        $request['img_old']=$file->getClientOriginalName();
+        $request['img_new']=$ret;
+
+
         $article = $this->articleService->create($request->all());
         //return view('article.show');
         return redirect()->route('article.index', $article->id);
-        }
+       // }
     }
+
 
 }
